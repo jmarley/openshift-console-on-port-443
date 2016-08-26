@@ -1,0 +1,19 @@
+= Reroute OpenShift Console to port 443
+The purpose of this is to expose the console on different port than the default
+8443. There are ways to expose the console natively from master on 443, but from
+what I understand there can be quite a number of tricky things that happen when
+it is manually altered, thus we are going to try and expose as an Endpoint.
+
+.Create Service layer
+
+.Create Endpoint layer
+
+.Create routing layer
+
+.Edit master configuration
+
+
+
+== References
+
+. https://blog.openshift.com/run-openshift-console-port-443/[clever thinking]
