@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: openshift-master
+spec:
+  host: osev3.paas.sd.spawar.navy.mil
+  port:
+    targetPort: 8443
+  to:
+    kind: Service
+    name: openshift-master
+  tls:
+    termination: passthrough
+status:
+  ingress: null
