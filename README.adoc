@@ -1,21 +1,57 @@
 = Reroute OpenShift Console to port 443
+:source-highlighter: pygments
+:icons: font
 
 The purpose of this is to expose the console on different port than the default
 8443. There are ways to expose the console natively from master on 443, but from
 what I understand there can be quite a number of tricky things that happen when
 it is manually altered, thus we are going to try and expose as an Endpoint.
 
-.Create Service layer
+=== Prerequisites
 
+. OSE master ip address:   *<ose-master-ip>*
+. OSE master hostname:     *<ose-master-hostname>*
+. OSE console host domain: *<new-ose-console-domain>*
+
+NOTE: The new console domain can be whatever you want on top of the subdomain.
+It just has to be routable to node hosting haproxy.
+
+
+.Create Service layer
+[source,bash]
+----
+$ oc create -f openshift/service.yaml
+----
 
 .Create Endpoint layer
+[source,bash]
+----
+$ sed -i 's/<template-master-ip-address>/<ose-master-ip>/g' \
+openshift/service.yaml
+$ oc create -f openshift/endpoint.yaml
+----
 
 .Create routing layer
+[source,bash]
+----
+$ sed -i 's/<template-ose-console-domain>/<new-ose-console-domain>:443/g' \
+openshift/route.yaml
+$ oc create -f openshift/route.yaml
+----
 
 .Edit master configuration
+[source,bash]
+----
+$ sed -i 's/https://<ose-master-hostname>:8443/<new-ose-console-domain>:443/g' \
+/etc/origin/master/master-config.yaml
+----
 
-
+.Restart master
+[source,bash]
+----
+$ systemctl restart atomic-openshift-master
+----
 
 == References
 
-. https://blog.openshift.com/run-openshift-console-port-443/[clever thinking]
+. https://blog.openshift.com/run-openshift-console-port-443/[Blog about to reroute from 8443 to 443]

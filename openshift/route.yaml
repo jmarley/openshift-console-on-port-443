@@ -3,7 +3,7 @@ kind: Route
 metadata:
   name: openshift-master
 spec:
-  host: osev3.paas.sd.spawar.navy.mil
+  host: <template-ose-console-domain>
   port:
     targetPort: 8443
   to:
